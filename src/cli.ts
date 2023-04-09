@@ -15,6 +15,9 @@ import editBookPrompts from './lib/prompts/editBooks.js';
 import createTagPrompts from './lib/prompts/createTag.js';
 import removeTagPrompts from './lib/prompts/removeTag.js';
 import editTagPrompts from './lib/prompts/editTag.js';
+import createAuthorPrompts from './lib/prompts/createAuthor.js';
+import editAuthorPrompts from './lib/prompts/editAuthor.js';
+import removeAuthorPrompts from './lib/prompts/removeAuthor.js';
 
 dotenv.config({ path: config.CONFIG_FILE });
 
@@ -62,6 +65,7 @@ await yargs(hideBin(process.argv))
     async (argv) => {
       argv.assets === 'book' && (await createBookPrompts());
       argv.assets === 'tag' && (await createTagPrompts());
+      argv.assets === 'author' && (await createAuthorPrompts());
     },
   )
   .command(
@@ -77,6 +81,7 @@ await yargs(hideBin(process.argv))
     async (argv) => {
       argv.assets === 'book' && (await editBookPrompts());
       argv.assets === 'tag' && (await editTagPrompts());
+      argv.assets === 'author' && (await editAuthorPrompts());
     },
   )
   .command(
@@ -92,6 +97,7 @@ await yargs(hideBin(process.argv))
     async (argv) => {
       argv.assets === 'book' && (await removeBookPrompts());
       argv.assets === 'tag' && (await removeTagPrompts());
+      argv.assets === 'author' && (await removeAuthorPrompts());
     },
   )
   .command(

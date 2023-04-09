@@ -53,6 +53,15 @@ export const createBook = async (book) => {
   return result;
 };
 
+export const createAuthor = async (author) => {
+  const result = await lApiClient()
+    .url('/authors')
+    .post(author)
+    .json((res) => res)
+    .catch((err) => err);
+  return result;
+};
+
 export const createTag = async (tag) => {
   const result = await lApiClient()
     .url('/tags')
@@ -80,6 +89,15 @@ export const editTag = async (tagId: string, tag) => {
   return result;
 };
 
+export const editAuthor = async (authorId: string, author) => {
+  const result = await lApiClient()
+    .url(`/authors/${authorId}`)
+    .put(author)
+    .json((res) => res)
+    .catch((err) => err);
+  return result;
+};
+
 export const getBook = async (bookId: string) => {
   const result = await lApiClient()
     .get(`/books/${bookId}`)
@@ -90,6 +108,13 @@ export const getBook = async (bookId: string) => {
 export const getTag = async (tagId: string) => {
   const result = await lApiClient()
     .get(`/tags/${tagId}`)
+    .json((res) => res.data);
+  return result;
+};
+
+export const getAuthor = async (authorId: string) => {
+  const result = await lApiClient()
+    .get(`/authors/${authorId}`)
     .json((res) => res.data);
   return result;
 };
@@ -106,6 +131,15 @@ export const deleteBook = async (bookId: string) => {
 export const deleteTag = async (tagId: string) => {
   const result = await lApiClient()
     .url(`/tags/${tagId}`)
+    .delete()
+    .json((res) => res)
+    .catch((err) => err);
+  return result;
+};
+
+export const deleteAuthor = async (authorId: string) => {
+  const result = await lApiClient()
+    .url(`/authors/${authorId}`)
     .delete()
     .json((res) => res)
     .catch((err) => err);
