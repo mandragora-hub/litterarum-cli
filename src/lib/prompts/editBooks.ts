@@ -67,7 +67,7 @@ export default async function editBookPrompts() {
       {
         type: 'confirm',
         name: 'newAuthor',
-        message: `Do you want to select a new author? Current author: ${book.author.name}`,
+        message: `Do you want to select a new author? Current author: ${book?.author?.name}`,
       },
       {
         type: 'autocomplete',
