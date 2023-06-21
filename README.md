@@ -1,10 +1,6 @@
 # CLI tools
 
-A CLI that converts natural language to shell commands.
-
-![Gif Demo](https://user-images.githubusercontent.com/844291/230413167-773845e7-4c9f-44a5-909c-02802b5e49f6.gif)
-
-Inspired by [Github Copilot X CLI](https://githubnext.com/projects/copilot-cli/), but open source for everyone.
+This tool is used to management Litterarum. It provides a way to create, remove and edit different types of assets, for example books and authors.
 
 ## Setup
 
