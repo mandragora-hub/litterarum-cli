@@ -5,6 +5,9 @@ import os from 'os';
 export const CONFIG_FILE = `${os.homedir()}/.lcli`;
 
 export function set(key: string, value: string) {
+  // Create file if not exists
+  if (!fs.existsSync(CONFIG_FILE)) fs.closeSync(fs.openSync(CONFIG_FILE, 'w'))
+
   const data = fs.readFileSync(CONFIG_FILE);
   const env = parse(data);
   env[key] = value;
