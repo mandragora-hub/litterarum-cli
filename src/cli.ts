@@ -21,21 +21,26 @@ import removeAuthorPrompts from './lib/prompts/removeAuthor.js';
 
 dotenv.config({ path: config.CONFIG_FILE });
 
-if (!config.hasMinimumConfiguration()) {
-  // cannot run without a minimum configuration
-  process.exit(1);
+
+async function checkOperability() {
+  if (!config.hasMinimumConfiguration()) {
+    // cannot run without a minimum configuration
+    process.exit(1);
+  }
+
+  if (!(await isRunning())) {
+    const healthcheckLink = terminalLink(
+      'Healthcheck',
+      `${process.env.API_URL}/healthcheck`,
+    );
+    console.error(
+      `${healthcheckLink} failed. Please make sure the api is running.`,
+    );
+    process.exit(1);
+  }
 }
 
-if (!(await isRunning())) {
-  const healthcheckLink = terminalLink(
-    'Healthcheck',
-    `${process.env.API_URL}/healthcheck`,
-  );
-  console.error(
-    `${healthcheckLink} failed. Please make sure the api is running.`,
-  );
-  process.exit(1);
-}
+
 
 await yargs(hideBin(process.argv))
   .command(
@@ -63,6 +68,7 @@ await yargs(hideBin(process.argv))
       });
     },
     async (argv) => {
+      await checkOperability();
       argv.assets === 'book' && (await createBookPrompts());
       argv.assets === 'tag' && (await createTagPrompts());
       argv.assets === 'author' && (await createAuthorPrompts());
@@ -79,6 +85,7 @@ await yargs(hideBin(process.argv))
       });
     },
     async (argv) => {
+      await checkOperability();
       argv.assets === 'book' && (await editBookPrompts());
       argv.assets === 'tag' && (await editTagPrompts());
       argv.assets === 'author' && (await editAuthorPrompts());
@@ -95,6 +102,7 @@ await yargs(hideBin(process.argv))
       });
     },
     async (argv) => {
+      await checkOperability();
       argv.assets === 'book' && (await removeBookPrompts());
       argv.assets === 'tag' && (await removeTagPrompts());
       argv.assets === 'author' && (await removeAuthorPrompts());
