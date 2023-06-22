@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import wretch from 'wretch';
 
 export async function searchBookCover(bookName: string) {
@@ -9,8 +11,11 @@ export async function searchBookCover(bookName: string) {
 export async function searchOpenLibrary(bookName: string) {
   const openLibraryUrl = `https://openlibrary.org/search.json?title=${bookName}`;
 
-  const result = await wretch(openLibraryUrl).get().json<any>();
-  if (result.numFound === 0) return [];
+  const result = await wretch(openLibraryUrl)
+    .get()
+    .json<any>()
+    .catch((error) => console.error(error));
+  if (!result || result.numFound === 0) return [];
 
   const coverUrls = result.docs
     .filter((doc) => doc.cover_i)
@@ -22,8 +27,11 @@ export async function searchOpenLibrary(bookName: string) {
 
 export async function searchGoogleBooks(bookName: string) {
   const googleBooksUrl = `https://www.googleapis.com/books/v1/volumes?q=${bookName}`;
-  const result = await wretch(googleBooksUrl).get().json<any>();
-  if (result.totalItems === 0) return [];
+  const result = await wretch(googleBooksUrl)
+    .get()
+    .json<any>()
+    .catch((error) => console.error(error));
+  if (!result || result.totalItems === 0) return [];
 
   const coverUrls = result.items
     .filter((item) => item.volumeInfo.imageLinks)
