@@ -16,11 +16,12 @@ import createTagPrompts from './lib/prompts/createTag.js';
 import removeTagPrompts from './lib/prompts/removeTag.js';
 import editTagPrompts from './lib/prompts/editTag.js';
 import createAuthorPrompts from './lib/prompts/createAuthor.js';
+import previewAuthorPrompts from './lib/prompts/previewAuthors.js';
 import editAuthorPrompts from './lib/prompts/editAuthor.js';
 import removeAuthorPrompts from './lib/prompts/removeAuthor.js';
+import previewBookPrompts from './lib/prompts/previewBooks.js';
 
 dotenv.config({ path: config.CONFIG_FILE });
-
 
 async function checkOperability() {
   if (!config.hasMinimumConfiguration()) {
@@ -40,8 +41,6 @@ async function checkOperability() {
   }
 }
 
-
-
 await yargs(hideBin(process.argv))
   .command(
     'list <assets>',
@@ -55,6 +54,22 @@ await yargs(hideBin(process.argv))
     },
     async (argv) => {
       await printList(argv.assets as Assets, argv.verbose as boolean);
+    },
+  )
+  .command(
+    'preview <assets>',
+    'Show information about the assets.',
+    (yargs) => {
+      return yargs.positional('assets', {
+        describe: 'type of assets',
+        type: 'string',
+        choices: assetsChoice,
+      });
+    },
+    async (argv) => {
+      argv.assets === 'book' && (await previewBookPrompts());
+      argv.assets === 'author' && (await previewAuthorPrompts());
+      // argv.assets === 'tag' && (await createTagPrompts());
     },
   )
   .command(
