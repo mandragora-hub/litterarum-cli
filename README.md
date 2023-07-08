@@ -38,22 +38,6 @@ ai list all log files
 
 Then you will get an output like this, where you can choose to run the suggested command, revise the command via a prompt, or cancel:
 
-```bash
-◇  Your script:
-│
-│  find . -name "*.log"
-│
-◇  Explanation:
-│
-│  1. Searches for all files with the extension ".log" in the current directory and any subdirectories.
-│
-◆  Run this script?
-│  ● ✅ Yes (Lets go!)
-│  ○ 📝 Revise
-│  ○ ❌ Cancel
-└
-```
-
 ### Upgrading
 
 Check the installed version with:
