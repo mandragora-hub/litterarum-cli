@@ -33,7 +33,7 @@ ai <prompt>
 For example:
 
 ```bash
-ai list all log files
+ai list all log file
 ```
 
 Then you will get an output like this, where you can choose to run the suggested command, revise the command via a prompt, or cancel:
