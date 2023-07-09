@@ -1,26 +1,48 @@
 # https://docs.github.com/en/actions
 
-name: "Release"
+name: 'Release'
 
 on: # yamllint disable-line rule:truthy
   push:
     tags:
-      - "**"
+      - 'v*'
 
 jobs:
-  release:
-    name: "Release"
-
-    runs-on: "ubuntu-latest"
-
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: "Determine tag"
-        run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
-
-      - name: "Create release"
-        uses: "actions/github-script@v6"
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          node-version: 19
+      - run: npm ci
+      - run: npm test
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 19
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    name: 'Release'
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: 'Determine tag'
+        run: 'echo "RELEASE_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV'
+
+      - name: 'Create release'
+        uses: 'actions/github-script@v6'
+        with:
+          github-token: '${{ secrets.GITHUB_TOKEN }}'
           script: |
             try {
               const response = await github.rest.repos.createRelease({
