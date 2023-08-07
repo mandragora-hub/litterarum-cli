@@ -9,6 +9,7 @@ import {
 } from '../../utils/lApiClient.js';
 import { searchBookCover } from '../../utils/bookCover.js';
 import errorHandler from '../../utils/errorHandler.js';
+import { getPdfInfo } from '../../utils/metadata.js';
 
 export default async function createBookPrompts() {
   inquirer.registerPrompt('autocomplete', inquirerPrompt);
@@ -88,6 +89,10 @@ export default async function createBookPrompts() {
     .then(async (answers) => {
       // clean answers
       delete answers['hasEPubFile'];
+      const metadata = await getPdfInfo(answers.pdfFile);
+      if (metadata) answers = { ...answers, ...metadata };
+
+      // show resume information
       console.log(JSON.stringify(answers, null, '  '));
 
       const { confirm } = await inquirer.prompt([

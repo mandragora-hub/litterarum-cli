@@ -11,6 +11,7 @@ import {
 } from '../../utils/lApiClient.js';
 import { searchBookCover } from '../../utils/bookCover.js';
 import errorHandler from '../../utils/errorHandler.js';
+import { getPdfInfo } from '../../utils/metadata.js';
 
 export default async function editBookPrompts() {
   inquirer.registerPrompt('autocomplete', inquirerPrompt);
@@ -133,11 +134,18 @@ export default async function editBookPrompts() {
       },
     ])
     .then(async (answers) => {
+      if (answers.newPdfFile) {
+        const metadata = await getPdfInfo(answers.pdfFile);
+        if (metadata) answers = { ...answers, ...metadata };
+      }
+      
       // clean answers
       delete answers['newCover'];
       delete answers['newEPubFile'];
       delete answers['newPdfFile'];
       delete answers['newAuthor'];
+
+      // show resume information
       console.log(JSON.stringify(answers, null, '  '));
 
       const { confirm } = await inquirer.prompt([
