@@ -10,6 +10,7 @@ import {
 import { searchBookCover } from '../../utils/bookCover.js';
 import errorHandler from '../../utils/errorHandler.js';
 import { getPdfInfo } from '../../utils/metadata.js';
+import ora from 'ora';
 
 export default async function createBookPrompts() {
   inquirer.registerPrompt('autocomplete', inquirerPrompt);
@@ -104,9 +105,11 @@ export default async function createBookPrompts() {
       delete answers['hasEPubFile'];
       !answers['isbn'] && delete answers['isbn'];
       !answers['publicationDate'] && delete answers['publicationDate'];
-
+      
+      const spinner = ora('Generating metadata...').start();
       const metadata = await getPdfInfo(answers.pdfFile);
       if (metadata) answers = { ...answers, ...metadata };
+      spinner.stop();
 
       // show resume information
       console.log(JSON.stringify(answers, null, '  '));

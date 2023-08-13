@@ -12,6 +12,7 @@ import {
 import { searchBookCover } from '../../utils/bookCover.js';
 import errorHandler from '../../utils/errorHandler.js';
 import { getPdfInfo } from '../../utils/metadata.js';
+import ora from 'ora';
 
 export default async function editBookPrompts() {
   inquirer.registerPrompt('autocomplete', inquirerPrompt);
@@ -108,8 +109,8 @@ export default async function editBookPrompts() {
         type: 'input',
         name: 'publicationDate',
         message: "What's the publication date?",
-        prefix: " 🌎 ",
-        suffix: " E.g. 378-321 BC, 1987",
+        prefix: ' 🌎 ',
+        suffix: ' E.g. 378-321 BC, 1987',
         default: book.publicationDate,
       },
       {
@@ -150,10 +151,12 @@ export default async function editBookPrompts() {
     ])
     .then(async (answers) => {
       if (answers.newPdfFile) {
+        const spinner = ora('Generating metadata...').start();
         const metadata = await getPdfInfo(answers.pdfFile);
         if (metadata) answers = { ...answers, ...metadata };
+        spinner.stop();
       }
-      
+
       // clean answers
       delete answers['newCover'];
       delete answers['newEPubFile'];
