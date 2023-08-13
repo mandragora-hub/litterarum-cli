@@ -105,6 +105,21 @@ export default async function editBookPrompts() {
         },
       },
       {
+        type: 'input',
+        name: 'publicationDate',
+        message: "What's the publication date?",
+        prefix: " 🌎 ",
+        suffix: " E.g. 378-321 BC, 1987",
+        default: book.publicationDate,
+      },
+      {
+        type: 'input',
+        name: 'isbn',
+        message: "What's the book isbn? ",
+        suffix: "If you don't have, leave it blank",
+        default: book.isbn,
+      },
+      {
         type: 'confirm',
         name: 'newPdfFile',
         message: `Do you want to select a new pdf file? Current: ${book.pdfFile}`,
@@ -144,6 +159,8 @@ export default async function editBookPrompts() {
       delete answers['newEPubFile'];
       delete answers['newPdfFile'];
       delete answers['newAuthor'];
+      !answers['isbn'] && delete answers['isbn'];
+      !answers['publicationDate'] && delete answers['publicationDate'];
 
       // show resume information
       console.log(JSON.stringify(answers, null, '  '));

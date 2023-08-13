@@ -64,6 +64,19 @@ export default async function createBookPrompts() {
         },
       },
       {
+        type: 'input',
+        name: 'publicationDate',
+        message: "What's the publication date?",
+        prefix: " 🌎 ",
+        suffix: " E.g. 378-321 BC, 1987",
+      },
+      {
+        type: 'input',
+        name: 'isbn',
+        message: "What's the book isbn? ",
+        suffix: "If you don't have, leave it blank"
+      },
+      {
         type: 'autocomplete',
         name: 'pdfFile',
         searchText: 'Searching...',
@@ -89,6 +102,9 @@ export default async function createBookPrompts() {
     .then(async (answers) => {
       // clean answers
       delete answers['hasEPubFile'];
+      !answers['isbn'] && delete answers['isbn'];
+      !answers['publicationDate'] && delete answers['publicationDate'];
+
       const metadata = await getPdfInfo(answers.pdfFile);
       if (metadata) answers = { ...answers, ...metadata };
 
